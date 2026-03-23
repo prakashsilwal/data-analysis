@@ -1,109 +1,201 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# 1.What is the use of matplotlib package in Data Science?
+"""
+Mini Project 4: Scottish Hills Data Analysis
+This script demonstrates basic data manipulation and visualization techniques
+using Scottish hills data.
+"""
 
-# Matplotlib is an essential Python library utilised extensively in data science for the construction of a variety of visualisations. It plays a crucial role in data exploration and analysis by allowing the creation of static, animated, and interactive charts and graphs. These visualisations include line plots, scatter plots, bar charts, histograms, and pie charts, among others, and serve as potent instruments for discovering insights and effectively communicating data-driven findings. Matplotlib facilitates exploratory data analysis (EDA) during the initial phases of data analysis by facilitating the examination of data distributions, patterns, anomalies, and trends. Supporting ROC curves, confusion matrices, and learning curves, it can also be utilised to evaluate model performance metrics in machine learning and statistical analyses. Matplotlib is indispensable for displaying temporal patterns, trends, and seasonality in time series data. Additionally, it is adaptable to geospatial data visualisation, accommodating maps, heatmaps, and other geographical visualisations when integrated with Basemap or Cartopy libraries. The library's extensive customization options, which include colours, labels, inscriptions, and typefaces, ensure that visualisations adhere to particular project specifications or brand aesthetics. Furthermore, Matplotlib excels in generating publication-ready plots and figures, facilitating export in various file formats. Additionally, it can be combined with other libraries to produce interactive visualisations for web applications and presentations. Matplotlib therefore plays a crucial role in data storytelling, allowing data scientists to create compelling narratives by employing visualisations to support findings and communicate complex information. Its integration with other data analysis tools such as NumPy, Pandas, and SciPy facilitates the importation, analysis, and visualisation of all data. Matplotlib is a flexible and indispensable tool for data professionals working with Python, offering extensive charting capabilities to investigate, analyse, and effectively communicate data.
+# ==============================================================================
+# QUESTION 1: What is the use of matplotlib package in Data Science?
+# ==============================================================================
 
-# 2. downloading and loading the data from github
+# ANSWER:
+# Matplotlib is an essential Python library utilized extensively in data science
+# for creating various visualizations. It plays a crucial role in data exploration
+# and analysis by enabling the creation of static, animated, and interactive charts
+# and graphs. These visualizations include:
+# - Line plots, scatter plots, bar charts, histograms, and pie charts
+# - Exploratory Data Analysis (EDA) visualizations for examining distributions,
+#   patterns, anomalies, and trends
+# - Machine learning metrics visualization (ROC curves, confusion matrices,
+#   learning curves)
+# - Time series analysis (temporal patterns, trends, seasonality)
+# - Geospatial visualizations (maps, heatmaps) when integrated with Basemap
+#   or Cartopy
+#
+# Key benefits:
+# - Extensive customization options (colors, labels, fonts)
+# - Publication-ready plots with export to various file formats
+# - Integration with NumPy, Pandas, and SciPy
+# - Essential tool for data storytelling and communicating complex information
 
-# In[13]:
+# ==============================================================================
+# QUESTION 2: Downloading and loading data from GitHub
+# ==============================================================================
 
-
+# Import required library for data manipulation
 import pandas as pd
 
+# Load the Scottish hills dataset from CSV file
+print("Loading Scottish hills data...")
 file_path = "scottish_hills.csv"
+df = pd.read_csv(file_path)
 
-df = pd.read_csv("scottish_hills.csv")
-
-
-# In[14]:
-
-
+# Display the first 10 rows to understand the dataset structure
+print("\nFirst 10 rows of the dataset:")
 df_head = df.head(10)
-
-# Printing DataFrame
 print(df_head)
 
 
-# 3. Sort the heights of the mountains in the descending order. (Hint: You can sort
-# the values in the DataFrame using the sort_values method.
-
-# In[16]:
-
+# ==============================================================================
+# QUESTION 3: Sort the heights of mountains in descending order
+# ==============================================================================
 
 # Sort the DataFrame by the "Height" column in descending order
+# This shows the tallest mountains first
 df_sorted = df.sort_values(by="Height", ascending=False)
 
-# Display the sorted DataFrame
+print("\n" + "="*60)
+print("Scottish Hills sorted by height (tallest first):")
+print("="*60)
 print(df_sorted)
 
 
-# 4. Draw a scatter plot “latitude” vs “height”. Clearly label the axes for full
-# credit.
-
-# In[24]:
-
+# ==============================================================================
+# QUESTION 4: Draw a scatter plot "latitude" vs "height"
+# ==============================================================================
 
 import matplotlib.pyplot as plt
 
+# Create a scatter plot to visualize the relationship between latitude and height
+# This helps identify any geographic patterns in mountain heights
+plt.figure(figsize=(10, 6))
+plt.scatter(df['Latitude'], df['Height'], alpha=0.6, edgecolors='k', linewidth=0.5)
 
-# Creating a scatter plot
-plt.scatter(df['Latitude'], df['Height'])
+# Add clear labels for the axes
+plt.xlabel('Latitude (degrees)', fontsize=12)
+plt.ylabel('Height (meters)', fontsize=12)
 
-#  labels for the x and y axes
-plt.xlabel('Latitude')
-plt.ylabel('Height (meters)')
+# Add a descriptive title
+plt.title('Scatter Plot: Latitude vs. Height of Scottish Hills', fontsize=14, fontweight='bold')
 
-# the title of the plot
-plt.title('Scatter Plot of Latitude vs. Height')
+# Add a grid for better readability
+plt.grid(True, alpha=0.3)
 
-# Displaying the plot
+# Display the plot
+plt.tight_layout()
+plt.savefig('latitude_vs_height.png', dpi=300, bbox_inches='tight')
+print("\nScatter plot saved as 'latitude_vs_height.png'")
 plt.show()
 
 
-# 2a. What is machine learning?
+# ==============================================================================
+# QUESTION 2a: What is machine learning?
+# ==============================================================================
 
-# Machine learning, a branch of artificial intelligence (AI), is dedicated to the advancement of algorithms and statistical models. These tools empower computer systems to enhance their performance in a given activity by leveraging data-driven learning, without the need for explicit programming. Machine learning is a computational approach that enables computers to autonomously acquire knowledge and provide predictions or determinations by discerning patterns and extracting information from data.
-# 
+# ANSWER:
+# Machine learning is a branch of artificial intelligence (AI) dedicated to
+# developing algorithms and statistical models that enable computer systems to
+# improve their performance on specific tasks through data-driven learning,
+# without explicit programming. It is a computational approach that allows
+# computers to autonomously:
+# - Learn from data
+# - Identify patterns
+# - Make predictions or decisions
+# - Extract meaningful information
+#
+# Key characteristics:
+# - Uses algorithms that learn from experience
+# - Improves performance over time with more data
+# - Can handle complex problems without explicit rules
+# - Applications include classification, regression, clustering, and more
 
-# In[32]:
 
+# ==============================================================================
+# LINEAR REGRESSION EXAMPLE: Predicting Speed Based on Age
+# ==============================================================================
 
 from scipy import stats
 
-# Defining the data 
+# Define sample data
+# x represents car age (years)
+# y represents car speed (arbitrary units)
 x = [5, 7, 8, 7, 2, 17, 2, 9, 4, 11, 12, 9, 6]
 y = [99, 86, 87, 88, 111, 86, 103, 87, 94, 78, 77, 85, 86]
 
-# Performing linear regression analysis
+# Perform linear regression analysis
+# This creates a linear model to predict speed based on age
 slope, intercept, r, p, std_err = stats.linregress(x, y)
 
-# Defining a function for the linear model
+# Define a function for the linear model
+# Model equation: y = slope * x + intercept
 def myfunc(x):
+    """
+    Predict speed based on car age using linear regression.
+
+    Args:
+        x (float): Car age in years
+
+    Returns:
+        float: Predicted speed
+    """
     return slope * x + intercept
 
-# Calculating the speed for x = 10 using the linear model
-speed = myfunc(10)
+# Calculate the predicted speed for a 10-year-old car
+speed_10 = myfunc(10)
+print("\n" + "="*60)
+print("LINEAR REGRESSION PREDICTIONS")
+print("="*60)
+print(f"Predicted speed for a 10-year-old car: {speed_10:.2f}")
 
-# Printing the result
-print("Predicted speed for x = 10:", speed)
+# Display the model parameters
+print(f"\nModel equation: Speed = {slope:.4f} * Age + {intercept:.4f}")
+print(f"R-squared value: {r**2:.4f}")
+print(f"P-value: {p:.4e}")
 
 
-# c.Predict the speed of an 8 year old car.
+# ==============================================================================
+# QUESTION c: Predict the speed of an 8-year-old car
+# ==============================================================================
 
-# In[33]:
-
-
-# Predicting the speed of an 8-year-old car
+# Predict the speed for an 8-year-old car using our linear model
 car_age = 8
-predicted_speed = myfunc(car_age)
+predicted_speed_8 = myfunc(car_age)
 
-# Printing the predicted speed
-print("Predicted speed for an 8-year-old car:", predicted_speed)
+print("\n" + "="*60)
+print(f"Predicted speed for an {car_age}-year-old car: {predicted_speed_8:.2f}")
+print("="*60)
 
+# Create a visualization of the linear regression
+plt.figure(figsize=(10, 6))
+plt.scatter(x, y, color='blue', alpha=0.6, s=100, edgecolors='k', label='Actual data')
 
-# In[ ]:
+# Plot the regression line
+x_line = range(0, 20)
+y_line = [myfunc(i) for i in x_line]
+plt.plot(x_line, y_line, color='red', linewidth=2, label='Regression line')
+
+# Highlight the predictions
+plt.scatter([10], [speed_10], color='green', s=150, marker='^',
+            edgecolors='k', linewidth=2, label='Predicted (age=10)', zorder=5)
+plt.scatter([8], [predicted_speed_8], color='orange', s=150, marker='s',
+            edgecolors='k', linewidth=2, label='Predicted (age=8)', zorder=5)
+
+plt.xlabel('Car Age (years)', fontsize=12)
+plt.ylabel('Speed', fontsize=12)
+plt.title('Linear Regression: Car Age vs Speed', fontsize=14, fontweight='bold')
+plt.legend(loc='best')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('car_age_speed_regression.png', dpi=300, bbox_inches='tight')
+print("\nRegression plot saved as 'car_age_speed_regression.png'")
+plt.show()
+
+print("\n" + "="*60)
+print("ANALYSIS COMPLETE!")
+print("="*60)
 
 
 
