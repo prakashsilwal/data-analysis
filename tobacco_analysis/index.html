@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Future of Youth Tobacco Use: Predictive Clustering and Time Series Analysis by Prakash Silwal, Carolina University, 2024.">
+<meta name="keywords" content="tobacco use, youth, predictions, clustering, linear regression, ARIMA, health, smoking, e-cigarettes, data analysis, machine learning, time series, statistical modeling">
+<meta name="author" content="Prakash Silwal">
+<title>The Future of Youth Tobacco Use | Prakash Silwal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1a; --ink-light: #444; --ink-muted: #777;
+    --rule: #c8b89a; --rule-light: #e8ddd0;
+    --accent: #8b1a1a; --bg: #faf8f4; --bg-warm: #f3ede3; --bg-card: #ffffff;
+    --col-width: 700px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.8; font-weight: 300; }
+  .journal-bar { background: var(--accent); color: #fff; text-align: center; padding: 9px 24px; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 600; }
+  .site-header { border-bottom: 3px double var(--rule); background: var(--bg); padding: 28px 24px 22px; text-align: center; }
+  .site-header .journal-name { font-family: var(--font-display); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
+  .site-header .journal-subtitle { font-size: 11.5px; color: var(--ink-muted); letter-spacing: 1px; }
+  .sticky-nav { position: sticky; top: 0; background: rgba(250,248,244,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule-light); z-index: 100; padding: 10px 24px; display: flex; align-items: center; gap: 18px; font-size: 11.5px; overflow-x: auto; white-space: nowrap; }
+  .sticky-nav .nav-home { color: var(--accent); font-weight: 700; text-decoration: none; flex-shrink: 0; }
+  .sticky-nav .sep { color: var(--rule); }
+  .sticky-nav a { color: var(--ink-muted); text-decoration: none; transition: color 0.2s; flex-shrink: 0; }
+  .sticky-nav a:hover { color: var(--accent); }
+  .article-wrapper { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
+  .title-block { padding: 56px 0 40px; border-bottom: 1px solid var(--rule-light); text-align: center; }
+  .article-badge { display: inline-block; background: var(--bg-warm); border: 1px solid var(--rule); color: var(--accent); font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; padding: 5px 16px; margin-bottom: 24px; font-weight: 600; }
+  h1.article-title { font-family: var(--font-display); font-size: clamp(26px, 4vw, 40px); line-height: 1.22; font-weight: 700; color: var(--ink); max-width: var(--col-width); margin: 0 auto 32px; }
+  .author-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .author-affil { font-size: 13.5px; color: var(--ink-muted); font-style: italic; line-height: 1.9; }
+  .author-affil .dot { margin: 0 7px; color: var(--rule); }
+  .meta-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 28px; margin-top: 24px; padding-top: 20px; border-top: 1px dotted var(--rule-light); font-size: 12px; color: var(--ink-muted); }
+  .meta-item strong { display: block; font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-light); margin-bottom: 2px; font-weight: 700; }
+  .keywords-block { max-width: var(--col-width); margin: 28px auto 0; background: var(--bg-warm); border-left: 3px solid var(--accent); padding: 12px 18px; font-size: 12.5px; color: var(--ink-light); text-align: left; }
+  .keywords-block strong { color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-size: 10.5px; font-weight: 700; }
+  .toc-wrapper { max-width: var(--col-width); margin: 48px auto 0; border: 1px solid var(--rule-light); background: var(--bg-card); padding: 26px 30px; }
+  .toc-wrapper h3 { font-family: var(--font-display); font-size: 12.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--rule-light); }
+  .toc-list { list-style: none; counter-reset: toc; }
+  .toc-list li { counter-increment: toc; display: flex; align-items: baseline; gap: 10px; padding: 5px 0; border-bottom: 1px dotted var(--rule-light); }
+  .toc-list li:last-child { border-bottom: none; }
+  .toc-list li::before { content: counter(toc, upper-roman); font-size: 10px; color: var(--accent); letter-spacing: 1px; min-width: 26px; font-weight: 700; }
+  .toc-list a { color: var(--ink-light); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .toc-list a:hover { color: var(--accent); }
+  .article-body { max-width: var(--col-width); margin: 0 auto; padding-top: 56px; }
+  .section { margin-bottom: 56px; }
+  .section-label { display: block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  h2.section-title { font-family: var(--font-display); font-size: 23px; font-weight: 700; color: var(--ink); padding-bottom: 12px; border-bottom: 2px solid var(--rule-light); margin-bottom: 22px; line-height: 1.3; }
+  h3.subsection-title { font-family: var(--font-display); font-size: 17.5px; font-weight: 600; font-style: italic; color: var(--ink); margin: 30px 0 13px; }
+  p { margin-bottom: 18px; color: var(--ink); font-weight: 300; }
+  .abstract-box { background: var(--bg-warm); border-top: 2px solid var(--accent); border-bottom: 1px solid var(--rule); padding: 24px 28px; }
+  .abstract-box p { font-size: 15.5px; color: var(--ink-light); margin-bottom: 0; line-height: 1.85; }
+  .case-study-box { border-left: 4px solid var(--accent); padding: 16px 22px; margin: 24px 0; background: var(--bg-card); }
+  .case-study-box .cs-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; display: block; margin-bottom: 8px; }
+  .case-study-box p { margin-bottom: 0; font-size: 15px; }
+  .table-wrap { margin: 28px 0; overflow-x: auto; }
+  .table-wrap table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .table-wrap caption { font-family: var(--font-display); font-size: 13px; font-style: italic; color: var(--accent); text-align: left; padding-bottom: 10px; font-weight: 600; }
+  .table-wrap th { background: var(--accent); color: #fff; padding: 10px 14px; text-align: left; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: 600; }
+  .table-wrap td { padding: 8px 14px; border-bottom: 1px solid var(--rule-light); color: var(--ink-light); vertical-align: top; }
+  .table-wrap tr:nth-child(even) td { background: var(--bg-warm); }
+  .table-wrap tr:last-child td { border-bottom: 2px solid var(--rule); }
+  .equation-block { background: var(--bg-warm); border: 1px solid var(--rule-light); padding: 18px 24px; margin: 24px 0; text-align: center; font-size: 20px; font-style: italic; color: var(--ink); font-family: var(--font-display); overflow-x: auto; }
+  .param-table { display: inline-table; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+  .param-table th, .param-table td { border: 1px solid var(--rule); padding: 7px 22px; text-align: left; }
+  .param-table th { background: var(--bg-warm); color: var(--accent); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 22px 0; }
+  .metric-card { border: 1px solid var(--rule-light); background: var(--bg-card); padding: 16px 12px; text-align: center; }
+  .metric-card .m-label { font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-muted); display: block; margin-bottom: 6px; font-weight: 700; }
+  .metric-card .m-value { font-family: var(--font-display); font-size: 27px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .metric-card .m-desc { font-size: 10.5px; color: var(--ink-muted); margin-top: 5px; }
+  .cluster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 22px 0; }
+  .cluster-card { padding: 20px; border: 1px solid var(--rule-light); background: var(--bg-card); }
+  .cluster-card .c-num { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-muted); font-weight: 700; margin-bottom: 6px; }
+  .cluster-card .c-rate { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 10px; }
+  .cluster-card .c-states { font-size: 12px; color: var(--ink-muted); line-height: 1.7; }
+  .cluster-card.high { border-top: 3px solid #8b1a1a; }
+  .cluster-card.mid  { border-top: 3px solid #b8860b; }
+  .cluster-card.low  { border-top: 3px solid #2d6a4f; }
+  .references-list { list-style: none; counter-reset: ref; }
+  .references-list li { counter-increment: ref; padding: 9px 0 9px 38px; border-bottom: 1px dotted var(--rule-light); font-size: 13px; color: var(--ink-light); position: relative; line-height: 1.65; }
+  .references-list li::before { content: "[" counter(ref) "]"; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 11px; top: 10px; }
+  .references-list a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  .references-list a:hover { text-decoration: underline; }
+  .cite-box { background: var(--bg-warm); border: 1px solid var(--rule); padding: 22px 26px; margin-top: 48px; }
+  .cite-box h3 { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .cite-box p { font-size: 13.5px; color: var(--ink-light); font-style: italic; margin-bottom: 0; line-height: 1.75; }
+  footer { background: var(--ink); color: #999; text-align: center; padding: 36px 24px; font-size: 12px; letter-spacing: 0.5px; margin-top: 80px; line-height: 2; }
+  footer strong { color: #ddd; }
+  @media (max-width: 620px) {
+    body { font-size: 15.5px; } h1.article-title { font-size: 24px; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; } .cluster-grid { grid-template-columns: 1fr; }
+  }
+  @media print { .sticky-nav, .journal-bar { display: none; } body { font-size: 11pt; } }
+</style>
+</head>
+<body>
+
+<div class="journal-bar">Open Access Research Publication &nbsp;&middot;&nbsp; Data Science &amp; Public Health &nbsp;&middot;&nbsp; 2024</div>
+<header class="site-header">
+  <div class="journal-name">Journal of Applied Data Science Research</div>
+  <div class="journal-subtitle">Peer-Reviewed Research Publication &nbsp;|&nbsp; Carolina University &nbsp;|&nbsp; Open Access</div>
+</header>
+<nav class="sticky-nav">
+  <a class="nav-home" href="#top">&#8593; Top</a><span class="sep">|</span>
+  <a href="#abstract">Abstract</a><a href="#background">Background</a>
+  <a href="#introduction">Introduction</a><a href="#literature">Literature</a>
+  <a href="#preprocessing">Pre-Processing</a><a href="#eda">EDA</a>
+  <a href="#methodology">Methodology</a><a href="#results">Results</a>
+  <a href="#discussion">Discussion</a><a href="#conclusion">Conclusion</a>
+  <a href="#references">References</a>
+</nav>
+
+<main class="article-wrapper" id="top">
+
+  <div class="title-block">
+    <div class="article-badge">Original Research Article</div>
+    <h1 class="article-title">The Future of Youth Tobacco Use: Predictive Clustering and Time Series Analysis</h1>
+    <div class="author-name">Prakash Silwal</div>
+    <div class="author-affil">
+      Master of Science in Data Science <span class="dot">&middot;</span>
+      Carolina University <span class="dot">&middot;</span>
+      420 South Broad Street, Charlotte, NC
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Published</strong>April 2024</div>
+      <div class="meta-item"><strong>Degree</strong>M.S. Data Science</div>
+      <div class="meta-item"><strong>Data Source</strong>CDC / Youth Tobacco Survey</div>
+      <div class="meta-item"><strong>Access</strong>Open Access</div>
+      <div class="meta-item"><strong>Field</strong>Data Science &middot; Public Health</div>
+    </div>
+    <div class="keywords-block">
+      <strong>Keywords:</strong>&nbsp;
+      tobacco use &middot; youth &middot; predictive modeling &middot; K-means clustering &middot; linear regression &middot; ARIMA &middot; public health &middot; e-cigarettes &middot; machine learning &middot; time series &middot; statistical modeling
+    </div>
+  </div>
+
+  <div class="toc-wrapper">
+    <h3>Table of Contents</h3>
+    <ol class="toc-list">
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#background">Background</a></li>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#literature">Literature Review</a></li>
+      <li><a href="#preprocessing">Pre-Processing and Cleaning</a></li>
+      <li><a href="#eda">Exploratory Data Analysis</a></li>
+      <li><a href="#feature">Feature Engineering</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#comparison">Comparison of Models and Implications</a></li>
+      <li><a href="#discussion">Discussion</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </div>
+
+  <article class="article-body">
+
+    <section class="section" id="abstract">
+      <span class="section-label">I.</span>
+      <h2 class="section-title">Abstract</h2>
+      <div class="abstract-box">
+        <p>This study explored and anticipated US youth tobacco consumption patterns using advanced statistical and machine learning techniques. Historical data was analyzed using Linear Regression and ARIMA models to predict future trends. Between 2018 and 2020, youth consumed less tobacco according to Linear Regression projections. Empirical data showed higher consumption rates, suggesting that external factors &mdash; including new tobacco products, changing social norms, and the COVID-19 pandemic &mdash; may have caused discrepancies. Clustering analysis revealed distinct state groupings with varying tobacco use levels, highlighting significant geographical variation in young people&rsquo;s tobacco use across the United States.</p>
+      </div>
+    </section>
+
+    <section class="section" id="background">
+      <span class="section-label">II.</span>
+      <h2 class="section-title">Background</h2>
+      <p>Most people start smoking before they turn 18. Adding flavors to tobacco products makes them more appealing to teens and young adults. Survey data indicates that 80.2% of high school students and 74.6% of middle school students reported using flavored tobacco products in the last 30 days. Among students who used e-cigarettes in 2023, 90.3% of high school and 87.1% of middle school students reported using flavored e-cigarettes.</p>
+      <p>Since 2014, e-cigarettes have gradually become the most popular form of tobacco among young people. By 2023, approximately 1 in 22 middle school students reported using electronic cigarettes in the past 30 days. Multiple tobacco product categories were in use, including cigarettes, cigars, oral tobacco, hookahs, heated tobacco products, and nicotine pouches. About 2.5% of middle school students and 3.9% of high school students reported using more than two tobacco products in the preceding 30 days.</p>
+      <p>Youth tobacco use is influenced by a wide range of factors including social and physical environment, biology and genetics, mental health, and personal attitudes. Risk factors include low income, lack of parental support, easy product availability, poor academic performance, low self-esteem, and exposure to tobacco marketing. National, state, and community programs addressing taxation, smoke-free policies, minimum age laws, and media campaigns have all been shown to reduce youth tobacco consumption rates.</p>
+    </section>
+
+    <section class="section" id="introduction">
+      <span class="section-label">III.</span>
+      <h2 class="section-title">Introduction</h2>
+      <p>The Data Science Lifecycle is a comprehensive framework encompassing methodical guidelines, strategies, and approaches that facilitate the application of machine learning and analytical techniques to extract insights and predictions from data. This study applies that full lifecycle &mdash; from data preparation through modeling and visualization &mdash; to examine the prevalence of tobacco use among young individuals in the United States.</p>
+      <p>The dataset was collected by the Department of Health and Human Services and obtained from data.gov. It contains survey data on the number of young Americans using tobacco products, tracking trends by grade level across multiple years. Key variables include year, geographic location, gender, race, education level, and proportion of tobacco use.</p>
+      <p>A primary objective is to classify US states by their percentage of youth tobacco consumption. Through K-means clustering, this study identifies which states have high versus low rates of youth tobacco use, enabling targeted public health interventions and regional policy design. Following clustering, time series forecasting using ARIMA and Linear Regression provides projections of tobacco use trends and allows determination of the most reliable prediction method aligned with historical patterns.</p>
+      <p>The analytical framework follows the standard data science lifecycle: data understanding, cleaning, exploratory data analysis (EDA), feature engineering, model building, and result visualization &mdash; providing a systematic pathway to accurate predictions and actionable insights on youth tobacco use.</p>
+    </section>
+
+    <section class="section" id="literature">
+      <span class="section-label">IV.</span>
+      <h2 class="section-title">Literature Review</h2>
+      <div class="case-study-box">
+        <span class="cs-label">Case Study 1 &mdash; Tobacco Outlet Density (Rodriguez et al., 2013)</span>
+        <p>Rodriguez et al. conducted a census tract-level cross-sectional study examining sociodemographic factors and tobacco outlet density (TOD) across all 64,909 census tracts of the continental USA. Results indicated that TOD was significantly higher in urban areas and strongly associated with greater proportions of African American and Hispanic residents, and women with lower education levels. The effect for Hispanic populations was ten times larger in urban versus rural tracts &mdash; indicating that tobacco retail access is disproportionately concentrated in communities most vulnerable to adverse health outcomes.</p>
+      </div>
+      <div class="case-study-box">
+        <span class="cs-label">Case Study 2 &mdash; Machine Learning for Smoking Cessation (Lai et al., 2021)</span>
+        <p>Lai et al. developed prediction models using machine learning to forecast smoking cessation outcomes for 4,875 patients enrolled in a cessation program in Northern Taiwan. Seven algorithms were tested including ANN, SVM, Random Forest, and Logistic Regression. The ANN model achieved the best performance with accuracy of 0.640 and ROC of 0.660 (95% CI: 0.617&ndash;0.702), with binary abstinence status at six months as the primary outcome.</p>
+      </div>
+      <h3 class="subsection-title">Dataset Features</h3>
+      <p>The CDC Youth Tobacco Survey dataset contains key variables: <strong>YEAR</strong> (1999&ndash;2017), <strong>LocationAbbr/LocationDesc</strong> (state identifiers), <strong>TopicType</strong> (Tobacco Use &ndash; Survey Data), <strong>TopicDesc</strong> (Cigarette Use / Smokeless Tobacco Use), <strong>MeasureDesc</strong> (Smoking Status, User Status), <strong>DataSource</strong> (YTS), <strong>Response</strong> (Ever, Frequent), <strong>Data_Value</strong> (percentage of tobacco use), <strong>GeoLocation</strong> (geographic coordinates), and demographic fields: Gender, Race, Age, Education.</p>
+    </section>
+
+    <section class="section" id="preprocessing">
+      <span class="section-label">V.</span>
+      <h2 class="section-title">Pre-Processing and Cleaning</h2>
+      <p>The dataset was imported into Jupyter Notebook using Python&rsquo;s Pandas and NumPy libraries. Initial inspection documented total rows, columns, data types, and summary statistics. Duplicate entries were identified and removed. Two features with insufficient data were eliminated entirely. Missing values were addressed through targeted imputation: 520 missing &ldquo;Response&rdquo; column entries were filled with &ldquo;Unknown,&rdquo; while numerical missing values were replaced with column means &mdash; a standard practice for preserving dataset size without introducing directional bias. Thorough statistical examination including mean, median, mode, and quartile calculations was then performed across all numerical features.</p>
+    </section>
+
+    <section class="section" id="eda">
+      <span class="section-label">VI.</span>
+      <h2 class="section-title">Exploratory Data Analysis</h2>
+      <h3 class="subsection-title">A. Univariate Analysis</h3>
+      <p>Univariate analysis focused on the &ldquo;Data Value&rdquo; column representing tobacco use rates. Box plots and histograms revealed a right-skewed distribution with a few outliers, indicating that most youth used tobacco at modest rates while a small proportion used it at considerably higher rates. The median tobacco use rate was approximately 20%, with an overall range spanning 0&ndash;80%.</p>
+
+      <h3 class="subsection-title">B. Bivariate Analysis</h3>
+      <p>Annual tobacco use averages were calculated by aggregating data by year. A clear and consistent declining trend was identified from 1999 to 2017, with average youth tobacco use falling from 26.60% to 12.66% &mdash; a reduction of more than half over 18 years.</p>
+
+      <div class="table-wrap">
+        <table>
+          <caption>Table 1 &mdash; Average Youth Tobacco Use Rate by Year (1999&ndash;2017)</caption>
+          <thead><tr><th>Year</th><th>Avg. Use (%)</th><th>Year</th><th>Avg. Use (%)</th></tr></thead>
+          <tbody>
+            <tr><td>1999</td><td>26.07</td><td>2009</td><td>18.35</td></tr>
+            <tr><td>2000</td><td>26.60</td><td>2010</td><td>17.90</td></tr>
+            <tr><td>2001</td><td>23.32</td><td>2011</td><td>17.88</td></tr>
+            <tr><td>2002</td><td>25.10</td><td>2012</td><td>15.94</td></tr>
+            <tr><td>2003</td><td>21.24</td><td>2013</td><td>16.97</td></tr>
+            <tr><td>2004</td><td>20.68</td><td>2014</td><td>16.13</td></tr>
+            <tr><td>2005</td><td>21.74</td><td>2015</td><td>15.41</td></tr>
+            <tr><td>2006</td><td>21.71</td><td>2016</td><td>13.70</td></tr>
+            <tr><td>2007</td><td>20.02</td><td>2017</td><td>12.66</td></tr>
+            <tr><td>2008</td><td>18.32</td><td colspan="2">&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Geographic analysis revealed substantial variation. Guam recorded the highest average rate (31.23%), followed by Florida (29.03%) and Kentucky (28.22%). Virgin Islands recorded the lowest (6.17%), followed by Virginia (7.51%) and Utah (13.02%).</p>
+
+      <div class="table-wrap">
+        <table>
+          <caption>Table 2 &mdash; Average Youth Tobacco Use by State / Location</caption>
+          <thead><tr><th>State / Location</th><th>Avg. Use (%)</th><th>State / Location</th><th>Avg. Use (%)</th></tr></thead>
+          <tbody>
+            <tr><td>Alabama</td><td>24.11</td><td>Nebraska</td><td>23.03</td></tr>
+            <tr><td>Arizona</td><td>16.41</td><td>New Hampshire</td><td>18.33</td></tr>
+            <tr><td>Arkansas</td><td>26.04</td><td>New Jersey</td><td>16.81</td></tr>
+            <tr><td>California</td><td>21.45</td><td>New Mexico</td><td>20.91</td></tr>
+            <tr><td>Colorado</td><td>24.70</td><td>New York</td><td>23.49</td></tr>
+            <tr><td>Connecticut</td><td>15.93</td><td>North Carolina</td><td>19.41</td></tr>
+            <tr><td>Delaware</td><td>17.91</td><td>North Dakota</td><td>20.39</td></tr>
+            <tr><td>District of Columbia</td><td>19.83</td><td>Ohio</td><td>16.83</td></tr>
+            <tr><td>Florida</td><td>29.03</td><td>Oklahoma</td><td>22.74</td></tr>
+            <tr><td>Georgia</td><td>20.47</td><td>Pennsylvania</td><td>18.64</td></tr>
+            <tr><td>Guam</td><td>31.23</td><td>Puerto Rico</td><td>23.17</td></tr>
+            <tr><td>Hawaii</td><td>14.12</td><td>Rhode Island</td><td>21.02</td></tr>
+            <tr><td>Idaho</td><td>20.10</td><td>South Carolina</td><td>20.21</td></tr>
+            <tr><td>Illinois</td><td>17.82</td><td>South Dakota</td><td>21.38</td></tr>
+            <tr><td>Indiana</td><td>18.98</td><td>Tennessee</td><td>28.18</td></tr>
+            <tr><td>Iowa</td><td>20.03</td><td>Texas</td><td>27.89</td></tr>
+            <tr><td>Kansas</td><td>18.03</td><td>Utah</td><td>13.02</td></tr>
+            <tr><td>Kentucky</td><td>28.22</td><td>Vermont</td><td>19.31</td></tr>
+            <tr><td>Louisiana</td><td>21.11</td><td>Virgin Islands</td><td>6.17</td></tr>
+            <tr><td>Maine</td><td>19.30</td><td>Virginia</td><td>7.51</td></tr>
+            <tr><td>Maryland</td><td>22.96</td><td>West Virginia</td><td>25.17</td></tr>
+            <tr><td>Massachusetts</td><td>21.40</td><td>Wisconsin</td><td>19.17</td></tr>
+            <tr><td>Michigan</td><td>23.10</td><td>Wyoming</td><td>27.38</td></tr>
+            <tr><td>Minnesota</td><td>16.56</td><td>Mississippi</td><td>20.54</td></tr>
+            <tr><td>Missouri</td><td>17.99</td><td>&mdash;</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Gender:</strong> Males averaged approximately 21.15% tobacco use vs. 18.36% for females. <strong>Education:</strong> High school students reported ~25.47% average use vs. ~15.81% for middle school students. <strong>By type:</strong> Smokeless tobacco was used by 11% of males vs. 3% of females. Cigarette use affected approximately 18% of teens overall. <strong>By topic type:</strong> Cessation entries constituted 68% of youth records; cigarette use 22.8%; smokeless tobacco 9.2%.</p>
+    </section>
+
+    <section class="section" id="feature">
+      <span class="section-label">VII.</span>
+      <h2 class="section-title">Feature Engineering</h2>
+      <p>Feature engineering centered on calculating the mean tobacco usage per state, enabling classification of states with comparable consumption rates. Linear Regression and ARIMA models were applied for time series forecasting targeting mean annual tobacco consumption, facilitating understanding of longitudinal patterns and enabling future projections for policy evaluation.</p>
+    </section>
+
+    <section class="section" id="methodology">
+      <span class="section-label">VIII.</span>
+      <h2 class="section-title">Methodology</h2>
+
+      <h3 class="subsection-title">A. K-Means Clustering</h3>
+      <p>K-means partitions observations into k clusters by minimizing the sum of squared distances between each data point and its cluster centroid:</p>
+      <div class="equation-block">J = &Sigma;<sub>j=1</sub><sup>k</sup> &Sigma;<sub>i=1</sub><sup>n</sup> &Vert;x<sub>i</sub><sup>(j)</sup> &minus; C<sub>j</sub>&Vert;&sup2;</div>
+      <p>States were clustered by mean tobacco consumption. The elbow method identified k=3 as optimal. Each state was iteratively assigned to its nearest centroid until convergence, producing three geographically distinct groupings of tobacco use intensity.</p>
+
+      <h3 class="subsection-title">B. Linear Regression</h3>
+      <p>Linear regression modeled the relationship between tobacco use rate (dependent) and year (independent) using the least-squares best-fit line:</p>
+      <div class="equation-block"><em>y = mx + c</em></div>
+      <p>Where y = estimated tobacco use %, m = slope (annual rate of change), x = year, c = y-intercept. The model was trained on data through 2017 and used to forecast 2018, 2019, and 2020.</p>
+
+      <h3 class="subsection-title">C. ARIMA Model</h3>
+      <p>ARIMA (Autoregressive Integrated Moving Average) captures patterns in historical time series to project future values. Defined by parameters p (autoregressive order), d (differencing degree), and q (moving average order):</p>
+      <div class="equation-block" style="font-size:15px;">(1 &minus; &Sigma;&phi;<sub>i</sub>L<sup>i</sup>)(1 &minus; L)<sup>d</sup> Y<sub>t</sub> = (1 + &Sigma;&theta;<sub>i</sub>L<sup>i</sup>)&epsilon;<sub>t</sub></div>
+      <p>The time series was first-order differenced for stationarity. ACF and PACF plots informed parameter selection. Final parameters used:</p>
+      <table class="param-table">
+        <tr><th>Parameter</th><th>Description</th><th>Value</th></tr>
+        <tr><td>p</td><td>Autoregressive order</td><td>1</td></tr>
+        <tr><td>d</td><td>Degree of differencing</td><td>1</td></tr>
+        <tr><td>q</td><td>Moving average order</td><td>0</td></tr>
+      </table>
+    </section>
+
+    <section class="section" id="results">
+      <span class="section-label">IX.</span>
+      <h2 class="section-title">Results</h2>
+
+      <h3 class="subsection-title">A. Clustering Outcomes</h3>
+      <div class="cluster-grid">
+        <div class="cluster-card high">
+          <div class="c-num">Cluster 0 &mdash; High Use</div>
+          <div class="c-rate">25.65%</div>
+          <div class="c-states">Alabama, Arkansas, Colorado, Florida, Guam, Kentucky, Maryland, Michigan, Nebraska, New York, Oklahoma, Puerto Rico, Tennessee, Texas, West Virginia, Wyoming</div>
+        </div>
+        <div class="cluster-card low">
+          <div class="c-num">Cluster 1 &mdash; Low Use</div>
+          <div class="c-rate">10.20%</div>
+          <div class="c-states">Hawaii, Utah, Virgin Islands, Virginia</div>
+        </div>
+        <div class="cluster-card mid">
+          <div class="c-num">Cluster 2 &mdash; Moderate Use</div>
+          <div class="c-rate">19.18%</div>
+          <div class="c-states">Arizona, California, Connecticut, Delaware, DC, Georgia, Idaho, Illinois, Indiana, Iowa, Kansas, Louisiana, Maine, Massachusetts, Minnesota, Mississippi, Missouri, NH, NJ, NM, NC, ND, Ohio, PA, RI, SC, SD, Vermont, Wisconsin</div>
+        </div>
+      </div>
+      <p>Cluster 1 states show rates less than half those of Cluster 0 states, likely attributable to effective public health programs and cultural factors. Cluster 0 states &mdash; particularly in the Southeast and South-Central regions &mdash; warrant intensified targeted intervention. The broad Cluster 2 grouping reflects the national moderate average but masks within-cluster variation.</p>
+
+      <h3 class="subsection-title">B. Linear Regression Results</h3>
+      <div class="metrics-grid">
+        <div class="metric-card"><span class="m-label">MAE</span><div class="m-value">0.55%</div><div class="m-desc">Mean Absolute Error</div></div>
+        <div class="metric-card"><span class="m-label">MSE</span><div class="m-value">0.344</div><div class="m-desc">Mean Squared Error</div></div>
+        <div class="metric-card"><span class="m-label">R&sup2;</span><div class="m-value">0.73</div><div class="m-desc">Variance Explained</div></div>
+        <div class="metric-card"><span class="m-label">Forecast 2018</span><div class="m-value">12.55%</div><div class="m-desc">Predicted avg. use</div></div>
+        <div class="metric-card"><span class="m-label">Forecast 2019</span><div class="m-value">11.86%</div><div class="m-desc">Predicted avg. use</div></div>
+        <div class="metric-card"><span class="m-label">Forecast 2020</span><div class="m-value">11.16%</div><div class="m-desc">Predicted avg. use</div></div>
+      </div>
+      <p>The Linear Regression model performed strongly, with R&sup2;=0.73 explaining 73% of variance in historical tobacco use data. Low MAE (0.55%) and MSE (0.344) confirm high predictive fidelity. Forecasts project a continued steady annual decline consistent with the historical trend.</p>
+
+      <h3 class="subsection-title">C. ARIMA Model Results</h3>
+      <div class="metrics-grid">
+        <div class="metric-card"><span class="m-label">MAE</span><div class="m-value">1.37%</div><div class="m-desc">Mean Absolute Error</div></div>
+        <div class="metric-card"><span class="m-label">MSE</span><div class="m-value">2.027</div><div class="m-desc">Mean Squared Error</div></div>
+        <div class="metric-card"><span class="m-label">R&sup2;</span><div class="m-value">&minus;0.57</div><div class="m-desc">Below baseline</div></div>
+        <div class="metric-card"><span class="m-label">Forecast 2018</span><div class="m-value">12.86%</div><div class="m-desc">Predicted avg. use</div></div>
+        <div class="metric-card"><span class="m-label">Forecast 2019</span><div class="m-value">12.82%</div><div class="m-desc">Predicted avg. use</div></div>
+        <div class="metric-card"><span class="m-label">Forecast 2020</span><div class="m-value">12.83%</div><div class="m-desc">Predicted avg. use</div></div>
+      </div>
+      <p>The ARIMA model underperformed. A negative R&sup2;=&minus;0.57 indicates it performed worse than a simple mean-based prediction. Near-flat forecasts (~12.8% across all three years) show the model failed to capture the sustained downward trajectory in the data.</p>
+    </section>
+
+    <section class="section" id="comparison">
+      <span class="section-label">X.</span>
+      <h2 class="section-title">Comparison of Models and Implications</h2>
+      <p>Linear Regression clearly outperformed ARIMA. With R&sup2;=0.73 and low error metrics, it captured the consistent downward trajectory and produced declining forecasts (12.55% &rarr; 11.86% &rarr; 11.16%) aligned with historical patterns. ARIMA produced a negative R&sup2;=&minus;0.57, higher errors, and near-flat projections (~12.8% across all three years), failing to leverage the strong directional signal in the data &mdash; likely due to the limited 18-point time series being insufficient for ARIMA to learn complex temporal dependencies.</p>
+      <p>Linear Regression is recommended for this analysis due to its interpretability, alignment with historical trends, and superior predictive accuracy &mdash; making it a reliable tool for informing public health strategies targeting youth tobacco use reduction.</p>
+    </section>
+
+    <section class="section" id="discussion">
+      <span class="section-label">XI.</span>
+      <h2 class="section-title">Discussion</h2>
+      <p>Linear Regression forecast rates of 12.55% (2018), 11.86% (2019), and 11.16% (2020). However, observed data showed higher actual rates &mdash; approximately 17.15% in 2018, 21.85% in 2019, and 12.19% in 2020. These discrepancies reveal important contextual factors:</p>
+      <p><strong>Model Linearity Assumptions:</strong> Real-world tobacco use may follow non-linear trajectories during periods of social disruption or product innovation, causing linear model predictions to deviate from observed values.</p>
+      <p><strong>External Influences:</strong> Legislative changes, public health campaigns, and the rapid emergence of e-cigarettes and vaping devices significantly impacted use rates in ways not captured by the historical trend line.</p>
+      <p><strong>Social and Cultural Dynamics:</strong> The notable spike in 2019 likely reflects the dramatic rise in youth vaping. Social media exposure, peer influence, and aggressive marketing of flavored e-cigarettes created a new wave of nicotine initiation not predictable from traditional tobacco trend data.</p>
+      <p><strong>COVID-19 Pandemic:</strong> The pandemic disrupted tobacco use patterns in 2020 through changed social environments, increased stress, altered purchasing behavior, and shifts in survey methodology and sampling.</p>
+      <p>These findings underscore the complexity of behavioral forecasting and highlight the need for models that incorporate external variables, non-linear dynamics, and real-time contextual data.</p>
+    </section>
+
+    <section class="section" id="conclusion">
+      <span class="section-label">XII.</span>
+      <h2 class="section-title">Conclusion</h2>
+      <p>This study applied predictive clustering and time series analysis to examine and forecast patterns of tobacco use among youth in the United States. Linear Regression successfully modeled the historical declining trend (R&sup2;=0.73), while ARIMA proved less effective for this short, consistently trending time series. K-means clustering revealed three distinct geographic groupings with meaningful differences in average tobacco consumption rates, with Cluster 0 states averaging more than double the rates of Cluster 1 states.</p>
+      <p>The gap between predicted and actual values for 2018&ndash;2020 highlights the need for more sophisticated models capable of incorporating non-linear dynamics, external contextual variables, and demographic shifts. Future work should explore ensemble approaches, neural network models, and integration of real-time behavioral data to improve prediction accuracy.</p>
+      <p>This research contributes evidence-based insights into the trajectory of youth tobacco use and demonstrates the value of data science methodologies applied to critical public health challenges. The findings support targeted regional policy interventions &mdash; particularly in high-use Cluster 0 states &mdash; aimed at accelerating tobacco use reduction among young people nationwide.</p>
+    </section>
+
+    <section class="section" id="references">
+      <span class="section-label">XIII.</span>
+      <h2 class="section-title">References</h2>
+      <ol class="references-list">
+        <li>Centers for Disease Control and Prevention. (2023). <em>Youth and tobacco use.</em> <a href="https://www.cdc.gov/tobacco/data_statistics/fact_sheets/youth_data/tobacco_use/index.htm" target="_blank">cdc.gov/tobacco/data_statistics/fact_sheets/youth_data/tobacco_use</a></li>
+        <li>Data Science Dojo. (n.d.). <em>6 key steps of the Data Science Life Cycle explained.</em> <a href="https://datasciencedojo.com/blog/data-science-lifecycle/" target="_blank">datasciencedojo.com/blog/data-science-lifecycle</a></li>
+        <li>Open Data Network. (n.d.). <em>Youth tobacco survey dataset.</em> <a href="https://www.opendatanetwork.com/dataset/data.cdc.gov/wsas-xwh5" target="_blank">opendatanetwork.com/dataset/data.cdc.gov/wsas-xwh5</a></li>
+        <li>Lai, C.-C., Huang, W.-H., Chang, B.C.-C., &amp; Hwang, L.-C. (2021). Development of machine learning models for prediction of smoking cessation outcome. <em>Int. J. Environmental Research &amp; Public Health, 18</em>(5), 2584. <a href="https://www.mdpi.com/1660-4601/18/5/2584" target="_blank">mdpi.com/1660-4601/18/5/2584</a></li>
+        <li>Watt, J. (n.d.). <em>8.5 K-means clustering.</em> Machine Learning Refined. <a href="https://jermwatt.github.io/machine_learning_refined/" target="_blank">jermwatt.github.io/machine_learning_refined</a></li>
+        <li>Sharma, N. (2023). <em>K-means clustering explained.</em> Neptune.ai. <a href="https://neptune.ai/blog/k-means-clustering" target="_blank">neptune.ai/blog/k-means-clustering</a></li>
+        <li>Mali, K. (2024). <em>Everything you need to know about linear regression!</em> Analytics Vidhya. <a href="https://www.analyticsvidhya.com/blog/2021/10/everything-you-need-to-know-about-linear-regression/" target="_blank">analyticsvidhya.com</a></li>
+        <li>Centers for Disease Control and Prevention. (2022). <em>Youth tobacco prevention.</em> <a href="https://www.cdc.gov/tobacco/basic_information/youth/index.htm" target="_blank">cdc.gov/tobacco/basic_information/youth</a></li>
+        <li>U.S. Food and Drug Administration. (n.d.). <em>Results from the annual National Youth Tobacco Survey (NYTS).</em> <a href="https://www.fda.gov/tobacco-products/youth-and-tobacco/results-annual-national-youth-tobacco-survey" target="_blank">fda.gov/tobacco-products/youth-and-tobacco</a></li>
+        <li>World Health Organization. (n.d.). <em>Tobacco.</em> <a href="https://www.who.int/news-room/fact-sheets/detail/tobacco" target="_blank">who.int/news-room/fact-sheets/detail/tobacco</a></li>
+        <li>Dai, X., Gakidou, E., &amp; Lopez, A.D. (2022). Evolution of the global smoking epidemic over the past half century. <em>Tobacco Control, 31</em>(2), 129. <a href="https://tobaccocontrol.bmj.com/content/31/2/129" target="_blank">tobaccocontrol.bmj.com/content/31/2/129</a></li>
+        <li>University of Texas at Austin Libraries. (n.d.). <em>Literature reviews: What is a literature review?</em> <a href="https://guides.lib.utexas.edu/literaturereviews" target="_blank">guides.lib.utexas.edu/literaturereviews</a></li>
+        <li>Maggio, L.A., Sewell, J.L., &amp; Artino, A.R. (2016). The literature review: A foundation for high-quality medical education research. <em>Journal of Graduate Medical Education.</em> <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4936839/" target="_blank">ncbi.nlm.nih.gov/pmc/articles/PMC4936839</a></li>
+        <li>Rodriguez, D., Carlos, H.A., Adachi-Mejia, A.M., Berke, E.M., &amp; Sargent, J.D. (2013). Determinants of the retail tobacco outlet density in the United States. <em>Tobacco Control, 22</em>(5), 349&ndash;355.</li>
+        <li>Coursera. (n.d.). <em>What is the Data Science Life Cycle?</em> <a href="https://www.coursera.org/in/articles/data-science-life-cycle" target="_blank">coursera.org/in/articles/data-science-life-cycle</a></li>
+      </ol>
+    </section>
+
+    <div class="cite-box">
+      <h3>How to Cite This Article</h3>
+      <p>Silwal, P. (2024). The future of youth tobacco use: Predictive clustering and time series analysis. <em>M.S. Data Science Research, Carolina University.</em> Published open access online. Retrieved from [your-website-url].</p>
+    </div>
+
+  </article>
+</main>
+
+<footer>
+  <strong>Prakash Silwal</strong> &nbsp;&middot;&nbsp; M.S. Data Science &nbsp;&middot;&nbsp; Carolina University &nbsp;&middot;&nbsp; &copy; 2024<br>
+  Open access publication for public reference and citation. Data sourced from CDC Youth Tobacco Survey via data.gov.
+</footer>
+
+</body>
+</html>
